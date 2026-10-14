@@ -34,7 +34,7 @@ torOnly: false
 permissions:
   - STORAGE_DOWNLOADS
 submitter: Zeus
-submission: https://github.com/
+submission: https://github.com/mgodwar/umbrel-apps
 releaseNotes: >-
   Initial release: Gluetun v3.41.1 (ProtonVPN WireGuard, Phoenix + Los Angeles servers),
   Decypharr, RDTClient.

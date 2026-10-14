@@ -1,5 +1,7 @@
 # Zeus Apps — private Umbrel community app store
 
+Repo: https://github.com/mgodwar/umbrel-apps
+
 Add to Umbrel: **App Store → ⋯ (top right) → Community App Stores → paste this repo's URL → Add**.
 
 | App | What it is |
