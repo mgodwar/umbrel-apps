@@ -4,3 +4,7 @@ zeus-vpn-downloads/data/secrets/*
 *.key
 *.conf
 .env
+
+# local tooling, never publish
+.claude-flow/
+.claude/
