@@ -1,0 +1,6 @@
+# never commit secrets
+zeus-vpn-downloads/data/secrets/*
+!zeus-vpn-downloads/data/secrets/.gitkeep
+*.key
+*.conf
+.env

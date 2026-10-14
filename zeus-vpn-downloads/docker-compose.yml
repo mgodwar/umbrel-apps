@@ -1,0 +1,74 @@
+version: "3.7"
+
+services:
+  app_proxy:
+    environment:
+      APP_HOST: zeus-vpn-downloads_gluetun_1
+      APP_PORT: 8282
+      # Decypharr has its own login, and Sonarr/Radarr call its API directly.
+      PROXY_AUTH_ADD: "false"
+
+  gluetun:
+    image: qmcgaw/gluetun:v3.41.1@sha256:1a5bf4b4820a879cdf8d93d7ef0d2d963af56670c9ebff8981860b6804ebc8ab
+    restart: on-failure
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      TZ: America/Phoenix
+      VPN_SERVICE_PROVIDER: protonvpn
+      VPN_TYPE: wireguard
+      # Key is read from data/secrets/wireguard_private_key (never stored in this repo).
+      WIREGUARD_PRIVATE_KEY_SECRETFILE: /run/secrets/wireguard_private_key
+      SERVER_COUNTRIES: United States
+      # Lowest latency from home, measured 2026-10-14: Phoenix 25-31 ms, Los Angeles 27-31 ms.
+      SERVER_CITIES: Phoenix,Los Angeles
+      HEALTH_RESTART_VPN: "on"
+      VPN_PORT_FORWARDING: "off"
+      FIREWALL_INPUT_PORTS: "8282,6500,8000"
+      # Home LAN, Umbrel app network, Docker bridges: lets Decypharr call back to Sonarr/Radarr.
+      FIREWALL_OUTBOUND_SUBNETS: "192.168.0.0/24,10.21.0.0/16,172.16.0.0/12"
+      HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE: '{"auth":"none","routes":["GET /v1/publicip/ip","GET /v1/vpn/status"]}'
+    volumes:
+      - ${APP_DATA_DIR}/data/gluetun:/gluetun
+      - ${APP_DATA_DIR}/data/secrets:/run/secrets:ro
+    ports:
+      - "6500:6500"     # RDTClient
+      - "18000:8000"    # Gluetun status (public IP / VPN state)
+
+  decypharr:
+    image: cy01/blackhole:latest@sha256:92f70e53530e4686d1346cd8a42dd97a41dd359ce5e378ebcb0858cfa2abc2df
+    restart: on-failure
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    environment:
+      TZ: America/Phoenix
+      PUID: "1000"
+      PGID: "1000"
+    volumes:
+      - ${APP_DATA_DIR}/data/decypharr:/app
+      - ${UMBREL_ROOT}/home/Downloads:/downloads
+
+  rdtclient:
+    image: rogerfar/rdtclient:latest@sha256:647db1c0040b1b28bb0e874fd2b58e315c52004c0c27d24e0e0b9be7f6d92469
+    restart: on-failure
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    environment:
+      TZ: America/Phoenix
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "002"
+    volumes:
+      - ${APP_DATA_DIR}/data/rdtclient:/data/db
+      - ${UMBREL_ROOT}/home/Downloads:/downloads
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"

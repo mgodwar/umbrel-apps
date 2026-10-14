@@ -1,0 +1,40 @@
+manifestVersion: 1
+id: zeus-vpn-downloads
+category: networking
+name: VPN Downloads
+version: "1.0.0"
+tagline: Decypharr + RDTClient, forced through ProtonVPN (Gluetun)
+description: >-
+  Debrid download stack that sends all traffic through ProtonVPN Plus (WireGuard) using Gluetun.
+  Decypharr (Real-Debrid, AllDebrid, TorBox) and RDTClient share Gluetun's network, so if the VPN
+  drops they have no route to the internet (kill switch).
+
+
+  Downloads land in Umbrel's Downloads folder (/downloads/decypharr and /downloads/rdtclient),
+  the same path Sonarr, Radarr, Lidarr and Jellyfin use, so no path mappings are needed.
+
+
+  Setup: put the WireGuard private key in data/secrets/wireguard_private_key inside this app's
+  data folder, then restart the app.
+
+
+  Decypharr UI opens from the Umbrel dashboard. RDTClient: http://umbrel.local:6500.
+  VPN status: http://umbrel.local:18000/v1/publicip/ip
+developer: Zeus
+website: https://github.com/qdm12/gluetun
+dependencies: []
+repo: https://github.com/sirrobot01/decypharr
+support: https://github.com/qdm12/gluetun/discussions
+port: 18282
+gallery: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+torOnly: false
+permissions:
+  - STORAGE_DOWNLOADS
+submitter: Zeus
+submission: https://github.com/
+releaseNotes: >-
+  Initial release: Gluetun v3.41.1 (ProtonVPN WireGuard, Phoenix + Los Angeles servers),
+  Decypharr, RDTClient.
