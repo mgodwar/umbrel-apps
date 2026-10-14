@@ -2,7 +2,7 @@ manifestVersion: 1
 id: zeus-vpn-downloads
 category: networking
 name: VPN Downloads
-version: "1.0.0"
+version: "1.0.1"
 tagline: Decypharr + RDTClient, forced through ProtonVPN (Gluetun)
 description: >-
   Debrid download stack that sends all traffic through ProtonVPN Plus (WireGuard) using Gluetun.
@@ -36,5 +36,6 @@ permissions:
 submitter: Zeus
 submission: https://github.com/mgodwar/umbrel-apps
 releaseNotes: >-
+  1.0.1: install no longer fails while the VPN key is not set yet.
   Initial release: Gluetun v3.41.1 (ProtonVPN WireGuard, Phoenix + Los Angeles servers),
   Decypharr, RDTClient.

@@ -41,9 +41,10 @@ services:
     image: cy01/blackhole:latest@sha256:92f70e53530e4686d1346cd8a42dd97a41dd359ce5e378ebcb0858cfa2abc2df
     restart: on-failure
     network_mode: service:gluetun
+    # Start with gluetun (not after it is healthy) so install never fails if the VPN is down;
+    # the kill switch still holds: no route out until gluetun's tunnel is up.
     depends_on:
-      gluetun:
-        condition: service_healthy
+      - gluetun
     environment:
       TZ: America/Phoenix
       PUID: "1000"
@@ -56,9 +57,10 @@ services:
     image: rogerfar/rdtclient:latest@sha256:647db1c0040b1b28bb0e874fd2b58e315c52004c0c27d24e0e0b9be7f6d92469
     restart: on-failure
     network_mode: service:gluetun
+    # Start with gluetun (not after it is healthy) so install never fails if the VPN is down;
+    # the kill switch still holds: no route out until gluetun's tunnel is up.
     depends_on:
-      gluetun:
-        condition: service_healthy
+      - gluetun
     environment:
       TZ: America/Phoenix
       PUID: "1000"
